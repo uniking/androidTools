@@ -29,3 +29,8 @@ archlinux使用fridaUiTools
 
 AndroidManifest.xml中搜索android.intent.category.LAUNCHER可找到主Activity
 java -jar tools/AXMLPrinter2.jar tmp/AndroidManifest.xml |grep -B 15 android.intent.category.LAUNCHER
+
+
+
+screenshotMonitor.sh
+需要长时间观察崩溃问题的时候，每隔5分钟截屏保存一次，配合抓日志使用，不用人一直盯着手机
