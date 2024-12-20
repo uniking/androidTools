@@ -6,7 +6,7 @@ import getopt
 import sys
 
 def help():
-    print("-h --help\n-l --list\n-g --get packagename\n-m --manifest xxx.apk\n-c --current\n-H --hang package/activity\n-C --continue\n-s --server\n-p --p2p HostPort:ProcessPort, example 23946:23946\n-S --sign xxx.apk\n-u --user show all user\n");
+    print("-h --help\n-l --list\n-g --get packagename\n-m --manifest xxx.apk\n-c --current\n-H --hang package/activity\n-C --continue\n-s --server\n-p --p2p HostPort:ProcessPort, example 23946:23946\n-S --sign xxx.apk\n-u --user show all user\n-t --taskinfo show activity TaskInfo\n");
     
 import subprocess
 import os
@@ -83,8 +83,10 @@ def main():
         help()
         return
     try:
-        options,args = getopt.getopt(sys.argv[1:],"hp:up:lp:g:m:cp:s:H:Cp:pp:S:", ["help", "user", "list", "get", "manifest","current","server","hang","continue", "p2p","sign"])
+        #:表示有参数， 没有:表示是一个布尔值
+        options,args = getopt.getopt(sys.argv[1:],"hulg:m:cts:H:Cp:S:", ["help", "user", "list", "get", "manifest","current", "taskinfo","server","hang","continue", "p2p","sign"])
     except getopt.GetoptError:
+        print('args error')
         help()
         sys.exit()
 
@@ -102,6 +104,8 @@ def main():
             backup_apps(value)
         if name in ("-c","--current"):
             os.system("adb shell dumpsys activity |grep topActivity")
+        if name in ("-t","--taskinfo"):
+            os.system("adb shell dumpsys activity |grep -A 9 'RecentTaskInfo #0'")
         if name in ("-m","--manifest"):
             cmd="unzip -d .tmp " + value
             os.popen(cmd).read()
@@ -120,7 +124,7 @@ def main():
             print(cmd)
             os.popen(cmd).read()
             print("debug port 8800")
-        if name in ("-C","--current"):
+        if name in ("-C","--continue"):
             os.system("jdb -attach 127.0.0.1:8800")
         if name in ("-s","--server"):
             fridaServer=os.path.basename(value)
